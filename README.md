@@ -1,5 +1,6 @@
 # lt2212-v19-a4
 Group project for assignment 4
+Classic supervised machine learning and feed-forward neural networks.
 
 ## Suggested alternative group names 
 * The tuples
