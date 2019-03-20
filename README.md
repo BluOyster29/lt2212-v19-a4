@@ -38,6 +38,8 @@ The Google News vectors is also massive, like over a gb so you might want to sav
 
 # Part 2: Vectorisation
 
+
+
 # Part 3: Simple PyTorch FFNN from scratch 
 
 # Part 4: Training and testing 
