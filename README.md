@@ -28,14 +28,17 @@ The Google News vectors is also massive, like over a gb so you might want to sav
 * Lines must be truncated so they are same length e.g line 1: Je suis Rob, line 2: my name is not Rob, then line two will have to have the last word cut off so that they are the same length. It's going to be a really naive translator so the output will look kinda silly. Old school google translate
 
 ## Can put below who does what for part 1:
-* Hemanthu:
-  ...
-  
-* Linnea:
-...
 
-* Rob:
-...
+**gendata.py:**
+**Hemanthu**:
+* ...
+  
+**Linnea**:
+* added start- and endline functionality
+
+**Rob**:
+* added args to argparse
+* return list of truncated English/French sentences
 
 # Part 2: Vectorisation
 
