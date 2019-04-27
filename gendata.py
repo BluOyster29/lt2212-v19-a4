@@ -22,6 +22,7 @@ def retrieving_data(filename, language_name):
     Output:
         language_text: list: tokenized data without stopwords
     '''
+    vocab = ['<s>']
     language_text = []
     stop_words = stopwords.words(language_name)
 
@@ -35,9 +36,14 @@ def retrieving_data(filename, language_name):
         for line in f:
             position += 1
             line = word_tokenize(line) # tolower?
+            vocab.extend(line)
             language_text.append(line)
             if position == args.endline:
                 break
+    
+    vocab = set(vocab)
+    #we need to skip vocabulary items that are not in word2vec
+    vocab = [w for w in vocab if w in word_vector.vocab()]
 
     return language_text
 
@@ -61,6 +67,21 @@ def truncate_me(text1, text2):
 def gengrams(text):
     trigrams = ngrams(text, 3, pad_left=True, pad_right=False, left_pad_symbol='<s>')
     return trigrams
+
+def onehot(vocab):
+    '''Make hot one encodings of all words in vocab
+    '''
+    # empty_vector = np.zeros(len(vocab), dtype=int)
+    word_index = {j:i for i,j in enumerate(vocab)}
+
+    one_hot = {w: np.zeros(len(vocab), dtype=int) for w in vocab}
+
+    for word in list(one_hot): #iterate over vocabulary keys while it's changing
+        i = word_index[word]
+        #print(one_hot[word])
+        one_hot[word][i] = 1 
+
+    return one_hot
 
 def split_data(data, T):
     '''To split our test and training. We could also do this manually if you prefer.
