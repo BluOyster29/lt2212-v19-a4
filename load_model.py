@@ -10,15 +10,11 @@ word_vectors = KeyedVectors.load_word2vec_format('GoogleNews-vectors-negative300
 print('length of w2v vocab:', len(word_vectors.wv.vocab))
 w2v_vocab = word_vector.vocab()
 
-# Print this to see if model works
-test = word_vectors.most_similar(positive=['woman', 'king'], negative=['man'])
-print(test)
-
 '''We could use SVD:s again (Singular vector decomposition)
-to get more dense vectors!'''
+to get more dense vectors?'''
 
-def sig(x):
-    return 1/(1+np.exp(-x))
+# def sig(x):
+#     return 1/(1+np.exp(-x))
 
 def softmax(inputs):
     return np.exp(inputs)/float(sum(np.exp(inputs)))
@@ -32,20 +28,35 @@ pred_out = sig(weighted_sum)
 # '''back propagation part'''
 
 class NNetwork:
-    def __init__(self, lr=1.0):
+    '''According to Asad:
+    input -> layer -> sigmoid -> layer -> softmax -> loss
+    '''
+    def __init__(self, lr=1.0): #I just set the lr to the same as in Asads perceptron. Idk :)
         self.lr=lr
         '''randomly initialize weights (and bias?)
         torch.mm gets the dot product'''
-        W = torch.rand(len(input), len(output))
-        #b = ?
+        self.W1 = torch.randn(len(input), len(output), requires_grad=True)
+        # self.W2 = 
+        self.b1 = torch.randn(len(input), len(output), requires_grad=True)
+        # self.b2 = 
 
-        # '''feed forward part
-        # torch.mm signifies dot product'''
+        # def forward(self)
+        # '''feed forward part'''
+        #     l1 = torch.mm(feature_set, weights) #weighted sum
+        #     out = torch.sigmoid(l1+self.bias)            
 
-        w_sum = torch.mm(feature_set, weights) + bias #weighted sum
+        #     l2 = softmax()
 
-        # hidden layer 1 <<< Is there really just 1 hidden layer?
-        # hidden layer 2
+        # def train(self, data, classes, epochs)
+        #     for e in range(0,epochs):
 
-# '''loss function'''
+        #         loss = ?
+        #         loss.backwardS()
+
+        self.optimizer = torch.optim.Adam([self.W1, self.b1, self.W2, self.b2], lr=self.learning_rate)
+
+        '''reset the gradient'''
+        self.optimizer.zero_grad()
+
+# '''loss function?'''
 # loss = sum([(output-actual_value)**2 for neuron in layer])

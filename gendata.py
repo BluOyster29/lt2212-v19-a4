@@ -78,7 +78,6 @@ def onehot(vocab):
 
     for word in list(one_hot): #iterate over vocabulary keys while it's changing
         i = word_index[word]
-        #print(one_hot[word])
         one_hot[word][i] = 1 
 
     return one_hot
