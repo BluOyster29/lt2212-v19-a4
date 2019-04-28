@@ -2,6 +2,20 @@
 Group project for assignment 4
 Classic supervised machine learning and feed-forward neural networks.
 
+## Backlog/To do
+* Solve the mystery of input/output
+* Remove words not in word2vec from vocab
+* Figure out the Adam optimizer
+* Add args to decide number of epochs, to use GPU as device... anything else?
+* Generate random vector for the start symbol (just add an array or something similar with 300 dims)
+
+Basic structure:
+1. Read texts and collect vocab
+2. Load model (word2vec)
+3. Remove words not in word2vec
+4. Feed the NN (we want p(t) and p(s|t), no?)
+5. Test
+
 ## Suggested alternative group names 
 * The tuples
 * Led Runagain?
