@@ -3,20 +3,13 @@ from gensim.models import Word2Vec
 from gensim.models.keyedvectors import KeyedVectors
 import torch
 import random
+import argparse
 
-parser = argparse.ArgumentParser(description="Convert text to features")
-parser.add_argument("-I", "--epochs", metavar="I", dest="iterations", type=int, default=1,
+parser = argparse.ArgumentParser(description="Configure neural network")
+parser.add_argument("-I", "--epochs", metavar="I", dest="epochs", type=int, default=1,
                     help="Numbers of desired epochs.")
 
 args = parser.parse_args()
-
-
-word_vectors = KeyedVectors.load_word2vec_format('GoogleNews-vectors-negative300.bin.gz', binary=True)
-
-'''we need to remove words that are not in here from the corpus
-'''
-print('length of w2v vocab:', len(word_vectors.wv.vocab))
-w2v_vocab = word_vector.vocab()
 
 # def sig(x):
 #     return 1/(1+np.exp(-x))
@@ -31,8 +24,8 @@ class NNetwork:
     def __init__(self, lr=0.1): #I just set the lr to the same as in Asads perceptron. Idk :)
         self.lr=lr
 
-        def forward(self, features)
-        '''feed forward part'''
+        def forward(self, features):
+            '''feed forward part'''
             l1 = features.mm(self.W1)
             out = torch.sigmoid(l1+self.b1)          
             l2 = out.mm(self.W2)
@@ -41,7 +34,7 @@ class NNetwork:
             # Warrick's one liner
             # out = features.mm(self.W1).sigmoid().mm(self.W2)
 
-        def train(self, data, classes, epochs=args.iterations)
+        def train(self, features, classes, epochs=args.iterations):
             '''What corresponds to what in the equation in the instructions:
             W1 = W
             W2 = U
@@ -51,6 +44,9 @@ class NNetwork:
 
             To do:
             Make a minibatch!
+
+            features: X
+            classes: Y
             '''
 
             self.W1 = torch.randn(len(features), len(output), requires_grad=True)
@@ -61,11 +57,11 @@ class NNetwork:
             '''back propagation part'''
             self.optimizer = torch.optim.Adam([self.W1, self.b1, self.W2, self.b2], lr=self.lr)
 
-            for e in range(0,epochs):
+            for e in range(0,args.epochs):
                 for i in range(batchsize):
                     print('Epoch number {}'.format(e))
                     self.forward()
-                    loss = (pred - actual).pow(2).sum()
+                    loss = (predicted - self.output).pow(2).sum()
                     self.optimizer.zero_grad()
                     loss.backwards()
                     self.optimizer.step()

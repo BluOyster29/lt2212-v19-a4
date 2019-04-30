@@ -6,7 +6,12 @@ from sklearn.model_selection import train_test_split
 
 #Part 1: Preprocessing
 
-def retrieving_data(filename, language_name):
+def fetchw2v():
+    word_vectors = KeyedVectors.load_word2vec_format('GoogleNews-vectors-negative300.bin.gz', binary=True)
+    w2v_vocab = word_vector.vocab()
+    return word_vectors, w2v_vocab
+
+def retrieving_data(filename, language_name, w2v_vocab):
     '''to do:
         - further tokenisation?
 
@@ -37,7 +42,7 @@ def retrieving_data(filename, language_name):
     
     vocab = set(vocab)
     #we need to skip vocabulary items that are not in word2vec
-    vocab = [w for w in vocab if w in word_vector.vocab()]
+    vocab = [w for w in vocab if w in w2v_vocab]
 
     return language_text, vocab
 
@@ -77,16 +82,18 @@ def onehot(text):
     for word in list(one_hot): #iterate over vocabulary keys while it's changing
         i = word_index[word]
         one_hot[word][i] = 1 
-
     return one_hot
 
-def lang_model(target):
-    if word == '<start>':
-        vec = np.random.rand(1,300) #this isn't in here, so we need to add it
-    else:
-        vec = word_vectors[word] #select the right vector for each word
-            
-    return vector
+    def sentencevector():
+        vectors = []
+        for word in sentence:
+            if word == '<start>':
+                vec = np.random.rand(1,300) #this isn't in here, so we need to add it
+                vectors.append(vec)
+            else:
+                vec = word_vectors[word] #select the right vector for each word       
+                vectors.append(vec)     
+        return vectors
 
 def split_data(data, T):
     '''To split our test and training. We could also do this manually if you prefer.
@@ -118,6 +125,7 @@ if __name__ == '__main__':
                         help="specifies whether or not to use preprocessing")
     args = parser.parse_args()
 
+    word_vectors, w2v_vocab = fetchw2v()
     english_lines, eng_vocab = retrieving_data('english_slice.txt', 'english')
     french_lines, french_vocab = retrieving_data('french_slice.txt', 'french')
     truncate_me(english_lines,french_lines)
