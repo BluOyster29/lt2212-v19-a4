@@ -4,17 +4,11 @@ from nltk.corpus import stopwords
 import numpy as np
 from sklearn.model_selection import train_test_split
 
-'''I removed metavars from R and P because I saw no use of them
-and they were causing conflict
-'''
-
 #Part 1: Preprocessing
 
 def retrieving_data(filename, language_name):
     '''to do:
-        - percentage of set to be used training/test
-        - further tokenisation
-        - truncation 
+        - further tokenisation?
 
     Args:
         filename: .txt file of source/target language data
@@ -45,7 +39,7 @@ def retrieving_data(filename, language_name):
     #we need to skip vocabulary items that are not in word2vec
     vocab = [w for w in vocab if w in word_vector.vocab()]
 
-    return language_text
+    return language_text, vocab
 
     print('Length of English lines: {}'.format(len(english_lines)))
     print('Length of French lines: {}'.format(len(french_lines)))
@@ -68,13 +62,17 @@ def gengrams(text):
     trigrams = ngrams(text, 3, pad_left=True, pad_right=False, left_pad_symbol='<s>')
     return trigrams
 
-def onehot(vocab):
-    '''Make hot one encodings of all words in vocab
-    '''
-    # empty_vector = np.zeros(len(vocab), dtype=int)
-    word_index = {j:i for i,j in enumerate(vocab)}
+def onehot(text):
+    '''Instructions:
+    For the target (English) trigram language model p(t)
+    your code needs to collect the vocabulary for both the training and test data
+    and turn it into vectors
 
-    one_hot = {w: np.zeros(len(vocab), dtype=int) for w in vocab}
+    Args: text: string
+    Output: one_hot: dict of {word: vector}
+    '''
+    word_index = {j:i for i,j in enumerate(text)}
+    one_hot = {w: np.zeros(len(text), dtype=int) for w in text}
 
     for word in list(one_hot): #iterate over vocabulary keys while it's changing
         i = word_index[word]
@@ -82,12 +80,20 @@ def onehot(vocab):
 
     return one_hot
 
+def lang_model(target):
+    if word == '<start>':
+        vec = np.random.rand(1,300) #this isn't in here, so we need to add it
+    else:
+        vec = word_vectors[word] #select the right vector for each word
+            
+    return vector
+
 def split_data(data, T):
     '''To split our test and training. We could also do this manually if you prefer.
     Let's figure out what the data is supposed to look like first ;)
     Args:
         data: arrays
-        T: desired size of test data in fractions (e.g. 0.1, 0.4...)
+        T: desired size of test data (e.g. 0.1, 0.4...)
     Output:
         arrays
     '''
@@ -95,6 +101,7 @@ def split_data(data, T):
     X_train, X_test, y_train, y_test = train_test_split(data, test_size=T) #should we shuffle? yes/no
 
     return X_train, X_test, y_train, y_test
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Convert text to features")
@@ -111,6 +118,8 @@ if __name__ == '__main__':
                         help="specifies whether or not to use preprocessing")
     args = parser.parse_args()
 
-    english_lines = retrieving_data('english_slice.txt', 'english')
-    french_lines = retrieving_data('french_slice.txt', 'french')
+    english_lines, eng_vocab = retrieving_data('english_slice.txt', 'english')
+    french_lines, french_vocab = retrieving_data('french_slice.txt', 'french')
     truncate_me(english_lines,french_lines)
+    lang_model_train = onehot(train)
+    lang_model_test = onehot(test)
