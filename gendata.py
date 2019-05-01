@@ -11,7 +11,6 @@ from sklearn.model_selection import train_test_split
 
 def fetchw2v():
     word_vectors = KeyedVectors.load_word2vec_format('GoogleNews-vectors-negative300.bin.gz', binary=True)
-    # w2v_vocab = word_vectors.vocab()
     return word_vectors#, w2v_vocab
 
 def retrieving_data(filename, language_name):
@@ -25,7 +24,6 @@ def retrieving_data(filename, language_name):
     vocab = ['<s>']
     language_text = []
     stop_words = stopwords.words(language_name)
-    # word_vectors = KeyedVectors.load_word2vec_format('GoogleNews-vectors-negative300.bin.gz', binary=True)
 
     with open(filename, encoding ='UTF-8') as f:
         position = 0 # to keep track of reading position
@@ -89,8 +87,8 @@ def construct_onehot(text, one_hot):
     '''Create one hot encoded ngrams:
     [hot+hot, class]
     '''
-    print("Constructing trigram model."
-    grams = ngrams(text, 3, pad_left=True, pad_right=False, left_pad_symbol='<s>')
+    print("Constructing trigram model.")
+    grams = ngrams(text, 3, pad_left=True, pad_right=False, left_pad_symbol='<start>')
 
     onehot_vectors = []
 
