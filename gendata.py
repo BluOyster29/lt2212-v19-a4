@@ -1,4 +1,7 @@
-import os, sys, glob, argparse, numpy as np, pandas as pd, subprocess, re
+import gensim
+from gensim.models import Word2Vec
+from gensim.models.keyedvectors import KeyedVectors
+import argparse
 from nltk import word_tokenize
 from nltk.corpus import stopwords
 import numpy as np
@@ -8,7 +11,7 @@ from sklearn.model_selection import train_test_split
 
 def fetchw2v():
     word_vectors = KeyedVectors.load_word2vec_format('GoogleNews-vectors-negative300.bin.gz', binary=True)
-    w2v_vocab = word_vector.vocab()
+    w2v_vocab = word_vectors.vocab()
     return word_vectors, w2v_vocab
 
 def retrieving_data(filename, language_name, w2v_vocab):
@@ -63,6 +66,8 @@ def truncate_me(text1, text2):
         #print(len(twin_lines[i][0]), len(twin_lines[i][1])) #testing that it worked
     return twin_lines 
 
+#Part 2: Vectorization
+
 def gengrams(text):
     trigrams = ngrams(text, 3, pad_left=True, pad_right=False, left_pad_symbol='<s>')
     return trigrams
@@ -84,16 +89,18 @@ def onehot(text):
         one_hot[word][i] = 1 
     return one_hot
 
-    def sentencevector():
-        vectors = []
-        for word in sentence:
-            if word == '<start>':
-                vec = np.random.rand(1,300) #this isn't in here, so we need to add it
-                vectors.append(vec)
-            else:
-                vec = word_vectors[word] #select the right vector for each word       
-                vectors.append(vec)     
-        return vectors
+def sentencevectors(sentence):
+    '''generate source lang w2v vectors
+    '''
+    vectors = []
+    for word in sentence:
+        if word == '<start>':
+            vec = np.random.rand(1,300) #this isn't in here, so we need to add it
+            vectors.append(vec)
+        else:
+            vec = word_vectors[word] #select the right vector for each word       
+            vectors.append(vec)     
+    return vectors
 
 def split_data(data, T):
     '''To split our test and training. We could also do this manually if you prefer.
