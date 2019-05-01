@@ -64,11 +64,11 @@ def truncate_me(text1, text2):
         newlines2.append(sent2[:i])
     return newlines1, newlines2
 
-def gengrams(text):
-    trigrams = ngrams(text, 3, pad_left=True, pad_right=True, left_pad_symbol='<start>', right_pad_symbol='<end>')
-    return trigrams
+# def gengrams(text):
+#     trigrams = ngrams(text, 3, pad_left=True, pad_right=True, left_pad_symbol='<start>', right_pad_symbol='<end>')
+#     return trigrams
 
-def onehot(text):
+def encode_onehot(vocab):
     '''Instructions:
     For the target (English) trigram language model p(t)
     your code needs to collect the vocabulary for both the training and test data
@@ -77,13 +77,31 @@ def onehot(text):
     Args: text: string
     Output: one_hot: dict of {word: vector}
     '''
-    word_index = {j:i for i,j in enumerate(text)}
-    one_hot = {w: np.zeros(len(text), dtype=int) for w in text}
+    word_index = {j:i for i,j in enumerate(vocab)}
+    one_hot = {w: np.zeros(len(vocab), dtype=int) for w in vocab}
 
     for word in list(one_hot): #iterate over vocabulary keys while it's changing
         i = word_index[word]
         one_hot[word][i] = 1 
     return one_hot
+
+def construct_onehot(text, one_hot):
+    '''Create one hot encoded ngrams:
+    [hot+hot, class]
+    '''
+    print("Constructing trigram model."
+    grams = ngrams(text, 3, pad_left=True, pad_right=False, left_pad_symbol='<s>')
+
+    onehot_vectors = []
+
+    for gram in list(grams):
+        label = gram[-1]
+        vector = []
+        for w in gram[:-1]:
+            vector += list(one_hot[w])
+        vector.append(label)
+        onehot_vectors.append(vector)   
+    return onehot_vectors
 
 def sentencevectors(text):
     '''Generate Word2Vec vectors to feed into the NN.
@@ -132,6 +150,4 @@ if __name__ == '__main__':
     eng_lines, fr_lines = truncate_me(eng_lines,fr_lines)
     #=====================================================================
     s_lang_train, s_lang_test, t_lang_train, t_lang_test = split_data(eng_lines,fr_lines,args.test_range)
-    eng_w2v = sentencevectors(s_lang_train)
-    eng_onehot = onehot(eng_vocab)
-    fr_onehot = onehot(fr_vocab)
+    # eng_w2v = sentencevectors(s_lang_train)
