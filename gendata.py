@@ -51,26 +51,19 @@ def retrieving_data(filename, language_name):
     print('Length of French lines: {}'.format(len(fr_lines)))
 
 def truncate_me(text1, text2):
-    '''Zip languages together --Lin
-    this returns a list of tuples that is the french/english line
-    i have truncated it, i don't wknow if you think there is a better way to output 
-    this bit? --Rob
+    '''Evens out sentences of text1 and text2.
     '''
-    text1 = []
-    text2 = []
+    newlines1 = []
+    newlines2 = [] 
 
     for sent1, sent2 in zip(text1,text2):
-        print(sent1)
         i = min([len(sent1),len(sent2)])
-        text1.append(sent1[:i])
-        text2.append(sent2[:i])
+        newlines1.append(sent1[:i])
+        newlines2.append(sent2[:i])
 
-    # for i in range(len(text1)):
-    #     sent = text2[i][:i]
-    #     text2.append(sent)
-
-    print(text1, text2)
-    return text1, text2
+    # for a,b in zip(newlines1,newlines2):
+    #     print(len(a),len(b))
+    return newlines1, newlines2
     
     # twin_lines = []
     # for i in range(len(text1)):
@@ -158,7 +151,7 @@ if __name__ == '__main__':
     eng_lines, eng_vocab = retrieving_data('english_slice.txt', 'english')
     fr_lines, french_vocab = retrieving_data('french_slice.txt', 'french')
     #=======================================================
-    truncs = truncate_me(eng_lines,fr_lines)
+    eng_lines, fr_lines = truncate_me(eng_lines,fr_lines)
     #=======================================================
     s_lang_train, s_lang_test, t_lang_train, t_lang_test = split_data(eng_lines,fr_lines,args.test_range)
     # eng_w2v = sentencevectors(s_lang_train)
