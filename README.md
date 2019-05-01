@@ -25,8 +25,9 @@ Basic structure:
 * Prints
 * Fleetwood Stack
 
-# Command line args
+## Command line args
 As for now, just gendata.py does it. We should consider splitting it up into smaller script, but this is NOT high priority.
+Note that the w2v vectors need to be in the same directory :)
 
 ## PyTorch 
 The tutorial for the Data Parallelism is [here](https://pytorch.org/tutorials/beginner/deep_learning_60min_blitz.html)
