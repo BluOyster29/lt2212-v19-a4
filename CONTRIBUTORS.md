@@ -5,10 +5,10 @@ Rob:
 - Initial preprocessing
 
 Warrick:
-- Structuring the NN structure
+- Structuring the NN
 
 Linnea:
 - Additional preprocessing
 - Vectorization
-- Structuring the NN structure
+- Structuring the NN
 
