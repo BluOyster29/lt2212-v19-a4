@@ -4,10 +4,10 @@ Classic supervised machine learning and feed-forward neural networks.
 
 ## Backlog/To do
 * Solve the mystery of input/output
-* Remove words not in word2vec from vocab
+* Remove words not in word2vec from vocab: DONE
 * Figure out the Adam optimizer
 * Add args to decide number of epochs, to use GPU as device... anything else?
-* Generate random vector for the start symbol (just add an array or something similar with 300 dims)
+* Generate random vector for the start symbol (just add an array or something similar with 300 dims): DONE
 
 Basic structure:
 1. Read texts and collect vocab
@@ -25,7 +25,8 @@ Basic structure:
 * Prints
 * Fleetwood Stack
 
-# Preparation
+# Command line args
+As for now, just gendata.py does it. We should consider splitting it up into smaller script, but this is NOT high priority.
 
 ## PyTorch 
 The tutorial for the Data Parallelism is [here](https://pytorch.org/tutorials/beginner/deep_learning_60min_blitz.html)
@@ -40,21 +41,6 @@ The Google News vectors is also massive, like over a gb so you might want to sav
 * args for randomly selecting data-size
 * Ideas for tokenisation (not required but might be nice to do) e.g lowercase, stopwords,regexes
 * Lines must be truncated so they are same length e.g line 1: Je suis Rob, line 2: my name is not Rob, then line two will have to have the last word cut off so that they are the same length. It's going to be a really naive translator so the output will look kinda silly. Old school google translate
-
-## Can put below who does what for part 1:
-
-**gendata.py:**
-**Hemanthu**:
-* ...
-  
-**Linnea**:
-* added start- and endline functionality
-
-**Rob**:
-* added args to argparse
-* return list of truncated English/French sentences
-
-# Part 2: Vectorisation
 
 
 ## Instructions
@@ -76,16 +62,6 @@ From Asad:
 *LaTeX: p(s|t) p ( s | t )  will look a little different. It will take word2vec vectors from English as input, and predict one-hot vectors in French. So you will need, in other words, word2vec English vectors for the inputs of both models, one-hot English vectors for predicting the last word of a trigram, and one-hot French vectors for predicting the current word translation.*
 
 Not totally sure what this means but we can work this out together
-
-# Part 3: Simple PyTorch FFNN from scratch 
-
-# Part 4: Training and testing 
-
-# Part 5: Reporting and submission
-
-# Bonus Part A: GPU
-
-# Bonus Part B: A different model
 
 # Bonus Part C: Party
 Post assignment party 
