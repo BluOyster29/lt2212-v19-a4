@@ -1,8 +1,10 @@
 import os, sys, glob, argparse, numpy as np, pandas as pd, subprocess, re
-from nltk import word_tokenize
+from nltk import word_tokenize, ngrams
 from nltk.corpus import stopwords
 import numpy as np
 from sklearn.model_selection import train_test_split
+from word2vec import KeyedVectors
+
 
 #Part 1: Preprocessing
 
@@ -37,7 +39,8 @@ def retrieving_data(filename, language_name):
     
     vocab = set(vocab)
     #we need to skip vocabulary items that are not in word2vec
-    vocab = [w for w in vocab if w in word_vector.vocab()]
+    
+    #vocab = [w for w in vocab if w in word_vector.vocab()] 
 
     return language_text, vocab
 
@@ -47,19 +50,20 @@ def retrieving_data(filename, language_name):
 def truncate_me(text1, text2):
     '''Zip languages together --Lin
     this returns a list of tuples that is the french/english line
-    i have truncated it, i don't know if you think there is a better way to output 
+    i have truncated it, i don't wknow if you think there is a better way to output 
     this bit? --Rob
     '''
+    
     twin_lines = []
     for i in range(len(text1)):
         lens = [len(text1[i]), len(text2[i])]
-        print(lens)
-        twin_lines.append((text1[i][:min(lens)],text2[i][:min(lens)]))
+        
+        twin_lines.append((list(gengrams(text1[i][:min(lens)])),list(gengrams(text2[i][:min(lens)]))))
         #print(len(twin_lines[i][0]), len(twin_lines[i][1])) #testing that it worked
     return twin_lines 
 
 def gengrams(text):
-    trigrams = ngrams(text, 3, pad_left=True, pad_right=False, left_pad_symbol='<s>')
+    trigrams = ngrams(text, 3, pad_left=True, pad_right=True, left_pad_symbol='<start>', right_pad_symbol='<end>')
     return trigrams
 
 def onehot(text):
@@ -81,12 +85,21 @@ def onehot(text):
     return one_hot
 
 def lang_model(target):
-    if word == '<start>':
-        vec = np.random.rand(1,300) #this isn't in here, so we need to add it
-    else:
-        vec = word_vectors[word] #select the right vector for each word
+    word_vectors = KeyedVectors.load_word2vec_format('GoogleNews-vectors-negative300.bin.gz', binary=True)
+
+    for i in target:
+        
+
+        if i[0][0] == '<start>':
+            vec = np.random.rand(1,300) #this isn't in here, so we need to add it
+            print(vec)
+        else:
+            try:
+                vec = word_vectors[i[0][0][0]] #select the right vector for each word
             
-    return vector
+            except:
+                print("not in word2vec")   
+        
 
 def split_data(data, T):
     '''To split our test and training. We could also do this manually if you prefer.
@@ -118,8 +131,10 @@ if __name__ == '__main__':
                         help="specifies whether or not to use preprocessing")
     args = parser.parse_args()
 
+    #word_vectors = KeyedVectors.load_word2vec_format('GoogleNews-vectors-negative300.bin.gz', binary=True)
+
     english_lines, eng_vocab = retrieving_data('english_slice.txt', 'english')
     french_lines, french_vocab = retrieving_data('french_slice.txt', 'french')
-    truncate_me(english_lines,french_lines)
-    lang_model_train = onehot(train)
-    lang_model_test = onehot(test)
+    truncs = truncate_me(english_lines,french_lines)
+    lang_model_train = lang_model(truncs)
+    #lang_model_test = onehot(test)
