@@ -21,7 +21,7 @@ def retrieving_data(filename, language_name):
     Output:
         language_text: list: tokenized data without stopwords
     '''
-    vocab = ['<s>']
+    vocab = ['<start>']
     language_text = []
     stop_words = stopwords.words(language_name)
 
@@ -40,15 +40,18 @@ def retrieving_data(filename, language_name):
             language_text.append(line)
             if position == args.endline:
                 break
-    
+    for word in vocab:
+        if word == '<start>':
+            pass
+        else:
+            if word not in word_vectors:
+                print('Word {} not in w2v deleted'.format(word))
+                vocab.remove(word)
+    # vocab = [w for w in vocab if w in word_vectors]
     vocab = set(vocab)
-    vocab = [w for w in vocab if w in word_vectors]
-    print(vocab)
+    #print(vocab)
 
     return language_text, vocab
-
-    print('Length of English lines: {}'.format(len(english_lines)))
-    print('Length of French lines: {}'.format(len(fr_lines)))
 
 def truncate_me(text1, text2):
     '''Evens out sentences of text1 and text2
@@ -92,6 +95,7 @@ def construct_onehot(text, one_hot):
 
     onehot_vectors = []
 
+    print('Construction one hot vectors...')
     for gram in list(grams):
         label = gram[-1]
         vector = []
@@ -143,9 +147,12 @@ if __name__ == '__main__':
 
     word_vectors = fetchw2v()
     eng_lines, eng_vocab = retrieving_data('english_slice.txt', 'english')
-    fr_lines, french_vocab = retrieving_data('french_slice.txt', 'french')
+    fr_lines, fr_vocab = retrieving_data('french_slice.txt', 'french')
     #=====================================================================
     eng_lines, fr_lines = truncate_me(eng_lines,fr_lines)
     #=====================================================================
     s_lang_train, s_lang_test, t_lang_train, t_lang_test = split_data(eng_lines,fr_lines,args.test_range)
     # eng_w2v = sentencevectors(s_lang_train)
+    fr_1hot = encode_onehot(fr_vocab)
+    for sent in t_lang_train:
+        fr_1hot_vecs = construct_onehot(sent, encode_onehot(fr_vocab))
