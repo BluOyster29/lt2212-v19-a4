@@ -1,6 +1,3 @@
-import gensim
-from gensim.models import Word2Vec
-from gensim.models.keyedvectors import KeyedVectors
 import torch
 import random
 import argparse
@@ -29,7 +26,8 @@ class NNetwork:
             l1 = features.mm(self.W1)
             out = torch.sigmoid(l1+self.b1)          
             l2 = out.mm(self.W2)
-            out2 = torch.sigmoid(l2+self.b2)
+            self.output = torch.softmax(l2+self.b2)
+            # out2 = torch.sigmoid(l2+self.b2)
 
             # Warrick's one liner
             # out = features.mm(self.W1).sigmoid().mm(self.W2)
@@ -58,27 +56,26 @@ class NNetwork:
             self.optimizer = torch.optim.Adam([self.W1, self.b1, self.W2, self.b2], lr=self.lr)
 
             for e in range(0,args.epochs):
+                print('Epoch number {}'.format(e))
                 for i in range(batchsize):
-                    print('Epoch number {}'.format(e))
                     self.forward()
                     loss = (predicted - self.output).pow(2).sum()
                     self.optimizer.zero_grad()
                     loss.backwards()
                     self.optimizer.step()
 
-        def predict(self, features):
-            '''Again, like Asads perceptron... but not sure if this is
-            the right place to use the softmax.
-            '''
-            predictions = []
-            for i in range (0, len(features)):
-                d = features.mm(self.W1)
-                out = torch.sigmoid(d+self.b1) 
-                d = out.mm(self.W2)
-                predicted = torch.softmax(d+self.b2)
-                self.output = predicted
-            return predictions
-
+        # def predict(self, features):
+        #     '''Again, like Asads perceptron... but not sure if this is
+        #     the right place to use the softmax.
+        #     '''
+        #     predictions = []
+        #     for i in range (0, len(features)):
+        #         d = features.mm(self.W1)
+        #         out = torch.sigmoid(d+self.b1) 
+        #         d = out.mm(self.W2)
+        #         predicted = torch.softmax(d+self.b2)
+        #         self.output = predicted
+        #     return predictions
         
 '''loss function?
 loss = sum([(output-actual_value)**2 for neuron in layer])
